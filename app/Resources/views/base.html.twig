@@ -1,13 +1,52 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+	<head>
+		<meta charset="UTF-8" />
+		<title>{% block title %}Google Drive Client{% endblock %}</title>
+		
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+		<link rel="stylesheet" type="text/css" href="{{ asset('css/base.css')}}">
+
+		{% block stylesheets %}{% endblock %}
+		<link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	</head>
+	<header>
+		<div class="navbar-fixed">
+		   <nav>
+				<div class="nav-wrapper">
+					<a href="#" class="brand-logo"><i class="material-icons">cloud</i>Google Drive Client</a>
+					{# <a href="#" data-activates="mobile-sideNav" class="button-collapse"><i class="material-icons">menu</i></a> #}
+					{# <ul class="right hide-on-med-and-down">
+						<li><a href="#" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Mapa de Semáforos"><i class="material-icons">map</i></a></li>
+						<li><a href="#" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Semáforos Registrados"><i class="material-icons">traffic</i></a></li>
+						<li><a href="#" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Calles más Transitadas"><i class="material-icons">format_list_bulleted</i></a></li>
+					</ul> #}
+				</div>
+			</nav>
+		</div>
+		
+{# 		<ul class="side-nav" id="mobile-sideNav">
+			<li><a href="#"><i class="material-icons">map</i> Mapa de Semáforos</a></li>
+			<li><a href="#"><i class="material-icons">traffic</i> Semáforos Registrados</a></li>
+			<li><a href="#"><i class="material-icons">format_list_bulleted</i> Calles más Transitadas</a></li>
+		</ul>
+ #}
+	</header>
+
+	<body>
+		<div class="body-wrapper">
+			{% block body %}{% endblock %}
+		<div>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// $(".button-collapse").sideNav();
+			});
+		</script>
+		{% block javascripts %}{% endblock %}
+	</body>
 </html>
