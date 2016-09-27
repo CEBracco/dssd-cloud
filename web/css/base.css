@@ -30,3 +30,7 @@ th, td{
 table.highlight > tbody > tr:hover {
   background-color: #e0e0e0;
 }
+
+.collapse{
+	display: none;
+}

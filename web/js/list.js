@@ -5,7 +5,7 @@ var CLIENT_ID = '758406434236-rv0ete34p36njs4n207lfqs5mkd2s0co.apps.googleuserco
 var SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
 
 var pageToken = null;
-var firstPageToken = null;
+var path = ['root'];
 
 /**
  * Check if current user has authorized this application.
@@ -64,9 +64,10 @@ function loadDriveApi() {
 function listFiles() {
 	var request = gapi.client.drive.files.list({
 		'pageSize': 40,
-		'orderBy': 'name',
+		'orderBy': 'folder,name',
 		'pageToken': pageToken,
-		'fields': "nextPageToken, files(id, name)"
+		'fields': "nextPageToken, files(id, name, mimeType)",
+		'q': "'"+ path[path.length - 1] +"' in parents"
 	});
 
 	request.execute(handleResponse);
@@ -74,28 +75,24 @@ function listFiles() {
 }
 
 function handleResponse(resp) {
-	// appendPre('Files:');
 	var files = resp.files;
 	if (files && files.length > 0) {
 		for (var i = 0; i < files.length; i++) {
 			var file = files[i];
-			// appendPre(file.name + ' (' + file.id + ')');
-			appendRow(file.name);
+			appendRow(file.id, file.name, file.mimeType);
 		}
 	}
 	else {
-		appendPre('No files found.');
+		appendRow('No files found.');
 	}
 	pageToken=resp.nextPageToken;
 
-	// if(firstPageToken == null){
-	// 	firstPageToken=pageToken;
-	// }
-	// else {
-	// 	if(firstPageToken == pageToken){
-	// 		alert('fin');
-	// 	}
-	// }
+	if(pageToken != null){
+		$('#nextPageButton').fadeIn();
+	}
+	else{
+		$('#nextPageButton').fadeOut();	
+	}
 }
 
 /**
@@ -104,14 +101,12 @@ function handleResponse(resp) {
  *
  * @param {string} message Text to be placed in pre element.
  */
-function appendPre(message) {
-	var pre = document.getElementById('output');
-	var textContent = document.createTextNode(message + '\n');
-	pre.appendChild(textContent);
-}
-
-function appendRow(message){
-	$('#filesTable > tbody:last-child').append('<tr><td>'+ message +'</td></tr>');
+function appendRow(id, name, mimeType = null){
+	var icon='description';
+	if(mimeType == 'application/vnd.google-apps.folder'){
+		icon='folder';
+	}
+	$('#filesTable > tbody:last-child').append("<tr><td id='"+ id +"' class='"+ icon +"'><i class='material-icons left'>"+ icon +'</i>'+ name +'</td></tr>');
 }
 
 $(document).ready(function(){
@@ -119,7 +114,14 @@ $(document).ready(function(){
 		handleAuthClick(event);
 	});
 
-	$('#nextPageButton').click(function(event){
+	$('#nextPageButton').click(function(){
 		listFiles();
 	});
+
+	$("#filesTable").on("click", "td", function() {
+		$('#filesTable tbody tr').remove();
+		pageToken=null;
+		path.push($(this).attr('id'));
+		listFiles();
+ 	});
 });

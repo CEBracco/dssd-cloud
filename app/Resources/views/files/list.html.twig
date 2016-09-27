@@ -5,9 +5,17 @@
 	<script src="https://apis.google.com/js/client.js?onload=checkAuth"></script>
 {% endblock %}
 
+{% block stylesheets %}
+	<style type="text/css">
+		th, td{
+			cursor: pointer;
+		}
+	</style>
+{% endblock %}
+
 {% block body %}
 <div class="container">
-	<div class="row authPanel" style="display:none">
+	<div class="row authPanel collapse">
 		<div class="col s12">
 			<div class="card horizontal">
 				<div class="card-image">
@@ -40,7 +48,7 @@
 							</tbody>
 						</table>
 						<div class="center-align">
-							<button id="nextPageButton" class="waves-effect waves-light btn blue accent-4">Siguiente</button>
+							<button id="nextPageButton" class="waves-effect waves-light btn blue accent-4 collapse">Siguiente</button>
 						</div>
 					</div>
 				</li>
