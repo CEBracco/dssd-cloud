@@ -1,21 +1,52 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+	<script src="{{ asset('js/list.js') }}"></script>
+	<script src="https://apis.google.com/js/client.js?onload=checkAuth"></script>
+{% endblock %}
+
 {% block body %}
-	<div class="container">
-	  <div class="col s12 m7">
-    <div class="card horizontal">
-      <div class="card-image">
-        <img id="drive-logo" src="{{ asset('img/google-drive-logo.jpg') }}">
-      </div>
-      <div class="card-stacked">
-        <div class="card-content">
-      	<span class="card-title">Debes iniciar sesión para ver tus archivos.</span>
-        </div>
-        <div class="card-action right-align">
-          <button class="waves-effect waves-light btn blue accent-4"><i class="fa fa-google left"></i> Iniciar sesión</button>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="container">
+	<div class="row authPanel" style="display:none">
+		<div class="col s12">
+			<div class="card horizontal">
+				<div class="card-image">
+					<img id="drive-logo" src="{{ asset('img/google-drive-logo.jpg') }}">
+				</div>
+				<div class="card-stacked">
+					<div class="card-content">
+						<span class="card-title">Debes iniciar sesión para ver tus archivos.</span>
+					</div>
+					<div class="card-action right-align">
+						<button class="waves-effect waves-light btn blue accent-4 signInButton"><i class="fa fa-google left"></i>Iniciar sesión</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12">
+			<ul id="tableList">
+				<li style="opacity:0">
+					<div class="card-panel">
+						<h4>Archivos subidos</h4>
+						<table id="filesTable" class="responsive-table striped highlight">
+							<thead>
+								<tr>
+									<th>Nombre</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+						<div class="center-align">
+							<button id="nextPageButton" class="waves-effect waves-light btn blue accent-4">Siguiente</button>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
 </div>
+<pre id="output"></pre>
 {% endblock %}

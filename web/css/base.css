@@ -21,3 +21,12 @@ body{
 #drive-logo{
 	height: 200px;
 }
+
+th, td{
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+table.highlight > tbody > tr:hover {
+  background-color: #e0e0e0;
+}
