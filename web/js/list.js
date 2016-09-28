@@ -62,6 +62,7 @@ function loadDriveApi() {
  * Print files.
  */
 function listFiles() {
+	$('#nextPageButton').hide();
 	var request = gapi.client.drive.files.list({
 		'pageSize': 40,
 		'orderBy': 'folder,name',
@@ -71,7 +72,6 @@ function listFiles() {
 	});
 
 	request.execute(handleResponse);
-
 }
 
 function handleResponse(resp) {
@@ -87,12 +87,7 @@ function handleResponse(resp) {
 	}
 	pageToken=resp.nextPageToken;
 
-	if(pageToken != null){
-		$('#nextPageButton').fadeIn();
-	}
-	else{
-		$('#nextPageButton').fadeOut();	
-	}
+	updateButtons();
 }
 
 /**
@@ -109,6 +104,25 @@ function appendRow(id, name, mimeType = null){
 	$('#filesTable > tbody:last-child').append("<tr><td id='"+ id +"' class='"+ icon +"'><i class='material-icons left'>"+ icon +'</i>'+ name +'</td></tr>');
 }
 
+function updateButtons(){
+	if(pageToken != null){
+		$('#nextPageButton').fadeIn();
+	}
+
+	if(path.length > 1){
+		$('#upButton').fadeIn();
+	}
+	else{
+		$('#upButton').fadeOut();	
+	}
+}
+
+
+function initialize(){
+	$('#filesTable tbody tr').remove();
+	pageToken=null;
+}
+
 $(document).ready(function(){
 	$('.signInButton').click(function(event){
 		handleAuthClick(event);
@@ -119,9 +133,16 @@ $(document).ready(function(){
 	});
 
 	$("#filesTable").on("click", "td", function() {
-		$('#filesTable tbody tr').remove();
-		pageToken=null;
+		initialize();
 		path.push($(this).attr('id'));
 		listFiles();
  	});
+
+ 	$('#upButton').click(function(){
+ 		initialize();
+ 		if(path.length > 1){
+			path.splice(path.length - 1, 1);
+		}
+		listFiles();
+	});
 });
