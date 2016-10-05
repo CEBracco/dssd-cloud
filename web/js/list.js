@@ -2,7 +2,10 @@
 // Developer Console, https://console.developers.google.com
 var CLIENT_ID = '758406434236-rv0ete34p36njs4n207lfqs5mkd2s0co.apps.googleusercontent.com';
 
-var SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
+var SCOPES =['https://www.googleapis.com/auth/drive.metadata.readonly',
+			'https://www.googleapis.com/auth/drive',
+			'https://www.googleapis.com/auth/drive.file',
+			'https://www.googleapis.com/auth/drive.appdata'];
 
 var pageToken = null;
 var path = ['root'];
@@ -31,7 +34,7 @@ function handleAuthResult(authResult) {
 		authorizeDiv.fadeOut(400, function(){
 			Materialize.showStaggeredList('#tableList');
 		});
-		loadDriveApi();
+		loadDriveApi(listFiles);
 	} else {
 		// Show auth UI, allowing the user to initiate authorization by
 		// clicking authorize button.
@@ -54,8 +57,8 @@ function handleAuthClick(event) {
 /**
  * Load Drive API client library.
  */
-function loadDriveApi() {
-	gapi.client.load('drive', 'v3', listFiles);
+function loadDriveApi(action) {
+	gapi.client.load('drive', 'v3', action);
 }
 
 /**
@@ -83,7 +86,7 @@ function handleResponse(resp) {
 		}
 	}
 	else {
-		appendRow('No files found.');
+		$('#emptyFolder').show();
 	}
 	pageToken=resp.nextPageToken;
 
@@ -119,11 +122,14 @@ function updateButtons(){
 
 
 function initialize(){
+	$('#emptyFolder').hide();
 	$('#filesTable tbody tr').remove();
 	pageToken=null;
 }
 
 $(document).ready(function(){
+	$('.modal-trigger').leanModal();
+
 	$('.signInButton').click(function(event){
 		handleAuthClick(event);
 	});
@@ -145,4 +151,35 @@ $(document).ready(function(){
 		}
 		listFiles();
 	});
+
+	$('#newFileButton').click(function(){
+		loadDriveApi(createFile);
+		
+
+		// var request = gapi.client.request({
+  //       'path': '/drive/v2/files',
+  //       'method': 'POST',
+  //       'body':{
+  //           "title" : "cat.jpg",
+  //           "mimeType" : "image/jpeg",
+  //           "description" : "Some"
+  //        }
+		
+	});
 });
+
+function createFile(){
+
+	var request= gapi.client.drive.files.create({
+		'name': $('#fileName').val(),
+		'mimeType': 'application/vnd.google-apps.document',
+		'parents': [ path[path.length - 1] ],
+		'body' : 'laaa'
+	});
+	// console.log(request);
+	request.execute(function(resp) {
+		// console.log(resp);
+		initialize();
+		listFiles();
+	});
+}

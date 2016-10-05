@@ -37,8 +37,15 @@
 			<ul id="tableList">
 				<li style="opacity:0">
 					<div class="card-panel">
-						<h4>Archivos subidos</h4>
-						<table id="filesTable" class="responsive-table striped highlight">
+						<div class="row">
+							<div class="col m8">
+								<h4>Archivos subidos</h4>
+							</div>
+							<div class="col m4">
+								<button id="newFile" data-target="newFileModal" class="waves-effect waves-light btn blue accent-4 right modal-trigger" style="margin-top: 1.5rem">Nuevo Archivo</button>
+							</div>
+						</div>
+						<table id="filesTable" class="striped highlight">
 							<thead>
 								<tr>
 									<th>Nombre<i id="upButton" class="material-icons waves-effect right tooltipped collapse" data-position="bottom" data-delay="800" data-tooltip="Subir un nivel">arrow_upward</i></th>
@@ -49,6 +56,7 @@
 						</table>
 						<div class="center-align">
 							<button id="nextPageButton" class="waves-effect waves-light btn blue accent-4 collapse">Siguiente</button>
+							<p id="emptyFolder" class="collapse">¡La carpeta esta vacia!</p>
 						</div>
 					</div>
 				</li>
@@ -56,5 +64,19 @@
 		</div>
 	</div>
 </div>
-<pre id="output"></pre>
+
+<div id="newFileModal" class="modal">
+	<div class="modal-content">
+		<div class="row">
+			<h5>Nuevo Archivo</h5>
+			<div class="input-field">
+				<input id="fileName" type="text" class="validate">
+				<label for="fileName">Nombre de archivo</label>
+			</div>
+    	</div>
+	</div>
+	<div class="modal-footer">
+		<button id="newFileButton" class="modal-action modal-close waves-effect btn-flat">Crear</button>
+	</div>
+</div>
 {% endblock %}
