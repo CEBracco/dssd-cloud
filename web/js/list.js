@@ -7,6 +7,8 @@ var SCOPES =['https://www.googleapis.com/auth/drive.metadata.readonly',
 			'https://www.googleapis.com/auth/drive.file',
 			'https://www.googleapis.com/auth/drive.appdata'];
 
+var accessToken;
+
 var pageToken = null;
 var path = ['root'];
 
@@ -28,6 +30,8 @@ function checkAuth() {
    * @param {Object} authResult Authorization result.
    */
 function handleAuthResult(authResult) {
+	accessToken=authResult.access_token;
+	gapi.load('drive-share', shareFile);
 	var authorizeDiv = $('.authPanel');
 	if (authResult && !authResult.error) {
 		// Hide auth UI, then load client library.
@@ -104,7 +108,8 @@ function appendRow(id, name, mimeType = null){
 	if(mimeType == 'application/vnd.google-apps.folder'){
 		icon='folder';
 	}
-	$('#filesTable > tbody:last-child').append("<tr><td id='"+ id +"' class='"+ icon +"'><i class='material-icons left'>"+ icon +'</i>'+ name +'</td></tr>');
+	$('#filesTable > tbody:last-child').append("<tr id='"+id+"''><td id='"+ id +"' class='"+ icon +" inspectionable'><i class='material-icons left'>"
+		+ icon +'</i>'+ name +"<i class='material-icons right waves-effect shareButton' title='Compartir'>share</i></td></tr>");
 }
 
 function updateButtons(){
@@ -138,9 +143,9 @@ $(document).ready(function(){
 		listFiles();
 	});
 
-	$("#filesTable").on("click", "td", function() {
+	$("#filesTable").on("click", ".inspectionable", function() {
 		initialize();
-		path.push($(this).attr('id'));
+		path.push($(this).closest('tr').attr('id'));
 		listFiles();
  	});
 
@@ -154,32 +159,30 @@ $(document).ready(function(){
 
 	$('#newFileButton').click(function(){
 		loadDriveApi(createFile);
-		
+	});
 
-		// var request = gapi.client.request({
-  //       'path': '/drive/v2/files',
-  //       'method': 'POST',
-  //       'body':{
-  //           "title" : "cat.jpg",
-  //           "mimeType" : "image/jpeg",
-  //           "description" : "Some"
-  //        }
-		
+	$("#filesTable").on("click", ".shareButton", function(e) {
+		e.stopPropagation();
+		var fileId= $(this).closest('tr').attr('id');
+		s.setItemIds([fileId]);
+		s.showSettingsDialog();
 	});
 });
 
 function createFile(){
-
 	var request= gapi.client.drive.files.create({
 		'name': $('#fileName').val(),
 		'mimeType': 'application/vnd.google-apps.document',
 		'parents': [ path[path.length - 1] ],
-		'body' : 'laaa'
 	});
-	// console.log(request);
+
 	request.execute(function(resp) {
-		// console.log(resp);
 		initialize();
 		listFiles();
 	});
+}
+
+function shareFile(){
+	s = new gapi.drive.share.ShareClient();
+	s.setOAuthToken(accessToken);
 }

@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block javascripts %}
+	<script type="text/javascript" src="https://apis.google.com/js/api.js"></script>
 	<script src="{{ asset('js/list.js') }}"></script>
 	<script src="https://apis.google.com/js/client.js?onload=checkAuth"></script>
 {% endblock %}
@@ -64,7 +65,6 @@
 		</div>
 	</div>
 </div>
-
 <div id="newFileModal" class="modal">
 	<div class="modal-content">
 		<div class="row">
