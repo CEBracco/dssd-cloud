@@ -5,7 +5,8 @@ var CLIENT_ID = '758406434236-rv0ete34p36njs4n207lfqs5mkd2s0co.apps.googleuserco
 var SCOPES =['https://www.googleapis.com/auth/drive.metadata.readonly',
 			'https://www.googleapis.com/auth/drive',
 			'https://www.googleapis.com/auth/drive.file',
-			'https://www.googleapis.com/auth/drive.appdata'];
+			'https://www.googleapis.com/auth/drive.appdata',
+			'https://www.googleapis.com/auth/documents'];
 
 var accessToken;
 
@@ -147,11 +148,11 @@ $(document).ready(function(){
 		initialize();
 		path.push($(this).closest('tr').attr('id'));
 		listFiles();
- 	});
+	});
 
- 	$('#upButton').click(function(){
- 		initialize();
- 		if(path.length > 1){
+	$('#upButton').click(function(){
+		initialize();
+		if(path.length > 1){
 			path.splice(path.length - 1, 1);
 		}
 		listFiles();
@@ -179,6 +180,7 @@ function createFile(){
 	request.execute(function(resp) {
 		initialize();
 		listFiles();
+		putDocumentContent(resp.id,$('#fileText').val());
 	});
 }
 
@@ -186,3 +188,35 @@ function shareFile(){
 	s = new gapi.drive.share.ShareClient();
 	s.setOAuthToken(accessToken);
 }
+
+function clearModal(){
+	$('#fileName').val('');
+	$('#fileText').val('');
+}
+
+function putDocumentContent(id,text){
+	var scriptId = "MIFTozboe_uHXyIf2hSHNnTXcweTaZvFx";
+
+	// Create an execution request object.
+	var request = {
+		'function': 'getDoc',
+		'parameters': [ id, text ]
+	};
+
+	// Make the API request.
+	var op = gapi.client.request({
+		'root': 'https://script.googleapis.com',
+		'path': 'v1/scripts/' + scriptId + ':run',
+		'method': 'POST',
+		'body': request
+	});
+
+	op.execute(function(resp){
+		clearModal();
+		Materialize.updateTextFields();
+	});
+}
+
+$(window).on('beforeunload', function(){
+	return "¿Desea salir de la página?";
+});
